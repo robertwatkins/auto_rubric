@@ -41,3 +41,11 @@ make sure you have llama3.2 installed or update the model specified to match the
  - Validate the work by adding in a way for folks to produce their own results and compared to calucated results
  - Update the model (or instructions) to account for these differences
  - Build a manual review process around reviewing READMEs to provide a 'complete' picture of the evaluation of this document.
+
+
+#Server
+##Prerequisites
+pip install flask flask-cors requests
+
+
+python server.py

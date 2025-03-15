@@ -1,0 +1,17 @@
+[
+    {
+      "display_name": "Main Topic",
+      "prompt": "What is the main topic of this document?",
+      "type": "text"
+    },
+    {
+      "display_name": "Contains Risk?",
+      "prompt": "Does this document mention any risks or challenges?",
+      "type": "boolean"
+    },
+    {
+      "display_name": "Number of Key Points",
+      "prompt": "How many key points are mentioned in this document?",
+      "type": "numeric"
+    }
+  ]

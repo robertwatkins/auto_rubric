@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Auto Rubric</title>
+    <script>
+        async function loadDocuments() {
+            const response = await fetch("http://localhost:5000/documents");
+            const files = await response.json();
+            const list = document.getElementById("file-list");
+            list.innerHTML = "";
+            files.forEach(file => {
+                const item = document.createElement("li");
+                item.textContent = file;
+                item.onclick = () => selectDocument(file);
+                list.appendChild(item);
+            });
+        }
+
+        async function selectDocument(filename) {
+            document.getElementById("selected-file").textContent = filename;
+            document.getElementById("question-list").innerHTML = "";
+            document.getElementById("document-viewer").textContent = "Loading...";
+            
+            // Load document content
+            const docResponse = await fetch(`http://localhost:5000/documents/${filename}`);
+            const docText = await docResponse.text();
+            document.getElementById("document-viewer").textContent = docText;
+
+            // Load questions
+            const questionsResponse = await fetch("http://localhost:5000/questions");
+            const questions = await questionsResponse.json();
+
+            // Load answers
+            const answerResponse = await fetch("http://localhost:5000/analyze", {
+                method: "POST",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify({ filename })
+            });
+            const answers = await answerResponse.json();
+
+            // Display questions and answers
+            const questionList = document.getElementById("question-list");
+            questions.forEach(q => {
+                const div = document.createElement("div");
+                div.innerHTML = `<strong>${q.display_name}:</strong> ${answers[q.display_name] || "Loading..."}`;
+                questionList.appendChild(div);
+            });
+        }
+
+        document.addEventListener("DOMContentLoaded", loadDocuments);
+    </script>
+</head>
+<body>
+    <h1>Auto Rubric</h1>
+    <div style="display: flex;">
+        <div style="width: 20%; padding: 10px; border-right: 1px solid #ddd;">
+            <h3>Files</h3>
+            <ul id="file-list"></ul>
+        </div>
+        <div style="width: 40%; padding: 10px; border-right: 1px solid #ddd;">
+            <h3>Analysis for <span id="selected-file">None</span></h3>
+            <div id="question-list"></div>
+        </div>
+        <div style="width: 40%; padding: 10px;">
+            <h3>Document Content</h3>
+            <pre id="document-viewer" style="white-space: pre-wrap; border: 1px solid #ccc; padding: 10px;"></pre>
+        </div>
+    </div>
+</body>
+</html>
