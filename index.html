@@ -5,6 +5,10 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Auto Rubric</title>
     <script>
+        let selectedFile = "";
+        let questions = {};
+        let aiAnswers = {};  // Store AI answers separately
+
         async function loadDocuments() {
             const response = await fetch("http://localhost:5000/documents");
             const files = await response.json();
@@ -19,6 +23,7 @@
         }
 
         async function selectDocument(filename) {
+            selectedFile = filename;
             document.getElementById("selected-file").textContent = filename;
             document.getElementById("question-list").innerHTML = "";
             document.getElementById("document-viewer").textContent = "Loading...";
@@ -30,23 +35,64 @@
 
             // Load questions
             const questionsResponse = await fetch("http://localhost:5000/questions");
-            const questions = await questionsResponse.json();
+            questions = await questionsResponse.json();
 
-            // Load answers
+            // Fetch AI answers once (only here!)
             const answerResponse = await fetch("http://localhost:5000/analyze", {
                 method: "POST",
                 headers: { "Content-Type": "application/json" },
-                body: JSON.stringify({ filename })
+                body: JSON.stringify({ filename, username: getUsername(), user_answers: {} }) // Empty user_answers to prevent saving prematurely
             });
-            const answers = await answerResponse.json();
 
-            // Display questions and answers
+            const data = await answerResponse.json();
+            aiAnswers = data.ai_answers || {};
+
+            // Display questions, AI responses, and user input fields
             const questionList = document.getElementById("question-list");
             questions.forEach(q => {
                 const div = document.createElement("div");
-                div.innerHTML = `<strong>${q.display_name}:</strong> ${answers[q.display_name] || "Loading..."}`;
+                div.innerHTML = `<strong>${q.display_name} (AI):</strong> ${aiAnswers[q.display_name] || "Loading..."}`;
+                
+                // User input field
+                const input = document.createElement("input");
+                input.type = q.type === "numeric" ? "number" : "text";
+                input.placeholder = `Your answer (${q.type})`;
+                input.id = `user-answer-${q.display_name}`;
+
+                div.appendChild(document.createElement("br"));
+                div.appendChild(input);
                 questionList.appendChild(div);
             });
+        }
+
+        function getUsername() {
+            return document.getElementById("username").value || "Anonymous";
+        }
+
+        async function submitResponses() {
+            if (!selectedFile) {
+                alert("Please select a document first.");
+                return;
+            }
+
+            // Gather user responses only
+            const userAnswers = {};
+            questions.forEach(q => {
+                userAnswers[q.display_name] = document.getElementById(`user-answer-${q.display_name}`).value || "";
+            });
+
+            // Submit only user responses (AI responses are already saved)
+            await fetch("http://localhost:5000/analyze", {
+                method: "POST",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify({ 
+                    filename: selectedFile, 
+                    username: getUsername(),
+                    user_answers: userAnswers 
+                })
+            });
+
+            alert("Responses saved successfully!");
         }
 
         document.addEventListener("DOMContentLoaded", loadDocuments);
@@ -54,6 +100,9 @@
 </head>
 <body>
     <h1>Auto Rubric</h1>
+    <label for="username">Username:</label>
+    <input type="text" id="username" placeholder="Enter your name">
+
     <div style="display: flex;">
         <div style="width: 20%; padding: 10px; border-right: 1px solid #ddd;">
             <h3>Files</h3>
@@ -62,6 +111,7 @@
         <div style="width: 40%; padding: 10px; border-right: 1px solid #ddd;">
             <h3>Analysis for <span id="selected-file">None</span></h3>
             <div id="question-list"></div>
+            <button onclick="submitResponses()">Submit Responses</button>
         </div>
         <div style="width: 40%; padding: 10px;">
             <h3>Document Content</h3>
