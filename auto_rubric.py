@@ -9,14 +9,7 @@ OLLAMA_URL = "http://localhost:11434/api/generate"  # Adjust if necessary
 MODEL = "llama3.2"  # Change this to your installed Ollama model
 DOCUMENTS_DIR = "./documents"  # Folder where documents are stored
 QUESTIONS = [
-    "What is the main topic of this document?",
-    "Are there instructions for setup and configuration? Answer with just 'Yes' or 'No'.",
-    "Are the configuration options explained? Answer with just 'Yes' or 'No'.",
-    "Are there usage examples provided? Answer with just 'Yes' or 'No'.",
-    "Are the prerequisites for using this document mentioned? Answer with just 'Yes' or 'No'.",
-    "Are tests included? Answer with just 'Yes' or 'No'.",
-    "Is there information about how to run the tests? Answer with just 'Yes' or 'No'.",
-    "Does this document mention any risks or challenges?",
+    "What postal or mailing addresses are listed in this document?"
 ]
 
 def read_document(filepath):

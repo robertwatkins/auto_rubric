@@ -11,8 +11,13 @@
   },
   {
     "display_name": "Address",
-    "prompt": "What postal or mailing addresses are listed in this document?",
+    "prompt": "What addresses are listed in this document?",
     "type": "text"
+  },
+  {
+    "display_name": "Are there Corporate Officers?",
+    "prompt": "Does this document list the names of corporate officers? Answer with 'Yes' or 'No'.",
+   "type": "boolean"
   },
   {
     "display_name": "Corporate Officers",
