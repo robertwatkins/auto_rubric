@@ -1,22 +1,37 @@
 [
   {
-    "display_name": "Legal Name",
-    "prompt": "The name of the corporation is typically in the title or 'Article I', or is followed by the text 'The name of the Corporation is'. The name of the Corporation is what?",
+    "display_name": "Summary",
+    "prompt": "What is a short summary of this project?",
     "type": "text"
   },
   {
-    "display_name": "State",
-    "prompt": "What state is this corporation incorporated in? Answer with the state name.",
-    "type": "text"
+    "display_name": "Contains Risk?",
+    "prompt": "Does this document mention any risks or challenges? Answer with 'Yes' or 'No'.",
+    "type": "boolean"
   },
   {
-    "display_name": "Address",
-    "prompt": "What postal or mailing addresses are listed in this document?",
-    "type": "text"
+    "display_name": "Number of Key Points",
+    "prompt": "How many key points are mentioned in this document? Answer with a number.",
+    "type": "numeric"
   },
   {
-    "display_name": "Corporate Officers",
-    "prompt": "List the names and titles of the corporate officers.",
-    "type": "text"
+    "display_name": "Are Tests Included?",
+    "prompt": "Does this project include tests? Answer with 'Yes' or 'No'.",
+    "type": "boolean"
+  },
+  {
+    "display_name": "Are pre-requisits listed?",
+    "prompt": "Does this document include pre-requisites? Answer with 'Yes' or 'No'.",
+    "type": "boolean"
+  },
+  {
+    "display_name": "Are setup instructions included?",
+    "prompt": "Does this document describe instructions to set up the project? Answer with 'Yes' or 'No'.",
+    "type": "boolean"
+  },
+  {
+    "display_name": "Are configuration options explained?",
+    "prompt": "Are configuration options explained? Answer with 'Yes' or 'No'.",
+    "type": "boolean"
   }
-  ]
+]
