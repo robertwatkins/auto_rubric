@@ -45,7 +45,13 @@ make sure you have llama3.2 installed or update the model specified to match the
 
 # Server
 ## Prerequisites
-pip install flask flask-cors requests
+pip install flask flask-cors requests boto3
 
+## Configure boto
+aws configure
 
+## Run with Ollama
 python server.py
+
+## Run with AWS Bedrock
+python server-bedrock.py
